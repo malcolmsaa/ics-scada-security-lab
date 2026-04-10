@@ -43,3 +43,29 @@ Example Suricata rule used in the lab:
 
 ```bash
 alert tcp any any -> any 502 (msg:"MODBUS WRITE DETECTED"; content:"|00 06|"; sid:1000001;)
+
+## Screenshots
+
+### Attack
+Modbus write attack from jump server to OT  
+![Attack](screenshots/attack.png)
+
+### tcpdump
+Captured Modbus traffic on port 502  
+![tcpdump](screenshots/tcpdump.png)
+
+### Suricata Alert
+Detection of malicious Modbus write  
+![Suricata](screenshots/alerts.png)
+
+### IDS Rule
+Custom Suricata rule used for detection  
+![Rule](screenshots/rules.png)
+
+### Firewall
+iptables rules controlling network segmentation  
+![Firewall](screenshots/firewall.png)
+
+### Terminal / Execution
+Attack execution and interaction with system  
+![Terminal](screenshots/terminal.png)
