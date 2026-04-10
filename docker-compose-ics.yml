@@ -1,0 +1,31 @@
+services:
+  openplc:
+    image: openplc:v3
+    container_name: openplc-runtime
+    ports:
+      - "8080:8080"
+      - "502:502"
+    networks:
+      ot-net:
+        ipv4_address: 10.0.50.10
+    restart: unless-stopped
+
+  scadabr:
+    image: scadalts/scadalts:latest
+    container_name: scadabr-hmi
+    ports:
+      - "9090:8080"
+    depends_on:
+      - openplc
+    networks:
+      ot-net:
+        ipv4_address: 10.0.50.20
+    restart: unless-stopped
+
+networks:
+  ot-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.50.0/24
+          gateway: 10.0.50.1
