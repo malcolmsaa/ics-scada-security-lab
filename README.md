@@ -1,71 +1,92 @@
-# ICS/SCADA Security Lab
+cat > README.md <<'EOF'
+# 🔐 ICS/SCADA Security Lab
 
-## Overview
-This project demonstrates a segmented ICS environment with IT, DMZ, and OT zones using Docker.
+A hands-on cybersecurity project that simulates an industrial control system under attack.
 
-It shows how an attacker can pivot through a jump server to reach an OT Modbus server, modify register values, and trigger detection with Suricata IDS.
+---
 
-## Architecture
-- IT zone: attacker workstation
-- DMZ: jump server
-- OT zone: Modbus server
+## 🚀 Overview
 
-Security model:
-- No direct access from IT to OT
-- Traffic is controlled through firewall rules
-- Access to OT is limited through the jump server
+This project demonstrates a segmented ICS environment built with Docker.
 
-## Technologies Used
-- Docker
-- Docker Compose
-- Modbus TCP
-- pymodbus
-- Suricata IDS
-- tcpdump
-- iptables
+The lab simulates a realistic attack scenario where an attacker:
+- moves from IT to DMZ to OT
+- exploits Modbus TCP
+- changes register values
+- gets detected using Suricata IDS
 
-## Attack Scenario
-The attack was performed from the IT side through the jump server to the OT network.
+---
 
-The attacker:
-1. Reached the jump server
-2. Connected to the Modbus server in OT
-3. Sent a Modbus write request
-4. Changed a register value
+## 🏗️ Architecture
 
-## Results
-- Register values were modified successfully
-- Traffic on port 502 was captured with tcpdump
-- Suricata detected the attack with a custom alert
+| Zone | Description |
+|------|------------|
+| IT | Attacker workstation |
+| DMZ | Jump server |
+| OT | Modbus server |
 
-## Detection Rule
-Example Suricata rule used in the lab:
+Security design:
+- No direct IT to OT access  
+- Firewall enforced segmentation  
+- Jump server required for pivoting  
+
+---
+
+## 🧰 Technologies Used
+
+- Docker  
+- Docker Compose  
+- Python (pymodbus)  
+- Modbus TCP  
+- Suricata IDS  
+- tcpdump  
+- iptables  
+
+---
+
+## ⚔️ Attack Scenario
+
+Steps performed:
+
+1. Accessed jump server  
+2. Pivoted into OT network  
+3. Sent Modbus write request  
+4. Changed register value  
+
+---
+
+## 📸 Screenshots
+
+### 🔴 Attack
+Modbus write attack executed from jump server to OT.
+
+![Attack](screenshots/attack.png)
+
+### 📡 tcpdump
+Captured Modbus traffic on port 502.
+
+![tcpdump](screenshots/tcpdump.png)
+
+### 🚨 Suricata Alert
+Detection of malicious Modbus write activity.
+
+![Suricata](screenshots/suricata.png)
+
+### 📜 Detection Rule
+Custom rule used in Suricata.
+
+![Rule](screenshots/rule.png)
+
+### 🔥 Firewall
+iptables rules enforcing segmentation.
+
+![Firewall](screenshots/firewall.png)
+
+---
+
+## 🧪 Detection
+
+A custom Suricata rule was used:
 
 ```bash
 alert tcp any any -> any 502 (msg:"MODBUS WRITE DETECTED"; content:"|00 06|"; sid:1000001;)
-
-## Screenshots
-
-### Attack
-Modbus write attack from jump server to OT  
-![Attack](screenshots/attack.png)
-
-### tcpdump
-Captured Modbus traffic on port 502  
-![tcpdump](screenshots/tcpdump.png)
-
-### Suricata Alert
-Detection of malicious Modbus write  
-![Suricata](screenshots/alerts.png)
-
-### IDS Rule
-Custom Suricata rule used for detection  
-![Rule](screenshots/rules.png)
-
-### Firewall
-iptables rules controlling network segmentation  
-![Firewall](screenshots/firewall.png)
-
-### Terminal / Execution
-Attack execution and interaction with system  
-![Terminal](screenshots/terminal.png)
