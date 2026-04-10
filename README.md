@@ -45,10 +45,29 @@ Steps:
 
 This shows how trust between zones can be abused.
 
+In a production environment, IDS alerts should automatically trigger response actions such as:
+
+- blocking attacker IP addresses  
+- terminating active sessions  
+- isolating compromised systems  
+
+## IEC 62443 Mapping
+
+This project relates to IEC 62443 principles:
+
+- Network segmentation (zones and conduits)  
+- Least privilege access  
+- Monitoring and detection  
+- Defense in depth  
+
+The lab demonstrates how lack of proper controls can allow unauthorized access to critical OT systems.
+
 ---
 
 ## 📸 Screenshots
 
+### 🏗️ Environment
+![Architecture](screenshots/architecture.png)
 ### 🔴 Attack
 Modbus write attack executed
 
