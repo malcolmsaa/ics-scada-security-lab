@@ -71,3 +71,12 @@ Projektet innehåller egna custom rules i:
 
 ```text
 configs/local_rules.xml
+
+
+![Dashboard](screenshots/dashboard.png)
+
+![Alerts](screenshots/alerts.png)
+
+![Rules](screenshots/rules.png)
+
+![Terminal](screenshots/terminal.png) 
