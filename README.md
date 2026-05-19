@@ -1,111 +1,73 @@
-cat > README.md <<'EOF'
-# 🔐 ICS/SCADA Security Lab
+# Lab 1 – Centraliserad säkerhetsövervakning med Wazuh
 
-> Simulating real-world attacks in industrial control systems using Docker, Modbus and IDS detection.
+## Introduction
 
----
+I detta projekt implementerade jag en centraliserad säkerhetsövervakningsmiljö med hjälp av Wazuh och Docker. Syftet med projektet var att samla in loggar, analysera säkerhetshändelser, upptäcka attacker samt visualisera och hantera alerts i realtid.
 
-## 🚀 Overview
+Projektet inkluderar:
 
-This project demonstrates a segmented ICS environment with IT, DMZ, and OT zones.
-
-The objective was to simulate a realistic cyber attack where an attacker:
-- pivots through a jump server
-- accesses an OT system
-- modifies process data using Modbus
-- gets detected using Suricata IDS
-
-Industrial Control Systems are critical infrastructure and often lack strong security controls  [oai_citation:1‡Wikipedia](https://en.wikipedia.org/wiki/Control_system_security?utm_source=chatgpt.com).
-
----
-
-## 🏗️ Architecture
-
-| Zone | Role |
-|------|------|
-| IT | Attacker machine |
-| DMZ | Jump server |
-| OT | Modbus server |
-
-Security model:
-- No direct IT → OT access
-- Controlled via firewall
-- Jump server required for access
+- Wazuh Manager
+- Wazuh Dashboard
+- Wazuh Indexer
+- Wazuh Agent
+- Egna custom rules
+- File Integrity Monitoring (FIM)
+- AI-baserad anomalidetektion
+- Automatiserad incidentrespons
+- Dokumentation och evidens
 
 ---
 
-## ⚔️ Attack Scenario
+# System Architecture
 
-Steps:
+Miljön är uppbyggd enligt en klassisk SIEM-arkitektur där flera komponenter arbetar tillsammans för att upptäcka och analysera säkerhetshot.
 
-1. Gain access to jump server  
-2. Pivot into OT network  
-3. Send Modbus write command  
-4. Modify register value  
+## Wazuh Agent
 
-This shows how trust between zones can be abused.
+Wazuh-agenten installeras på klienten och ansvarar för att samla in:
 
-In a production environment, IDS alerts should automatically trigger response actions such as:
+- systemloggar
+- filändringar
+- kommandon
+- säkerhetshändelser
+- systemaktivitet
 
-- blocking attacker IP addresses  
-- terminating active sessions  
-- isolating compromised systems  
-
-## IEC 62443 Mapping
-
-This project relates to IEC 62443 principles:
-
-- Network segmentation (zones and conduits)  
-- Least privilege access  
-- Monitoring and detection  
-- Defense in depth  
-
-The lab demonstrates how lack of proper controls can allow unauthorized access to critical OT systems.
+Informationen skickas därefter vidare till Wazuh Manager.
 
 ---
 
-## 📸 Screenshots
+## Wazuh Manager
 
-### 🏗️ Environment
-![Architecture](screenshots/architecture.png)
-### 🔴 Attack
-Modbus write attack executed
+Wazuh Manager analyserar inkommande loggar och jämför dem mot definierade regler. När misstänkt aktivitet identifieras genereras en alert.
 
-![Attack](screenshots/attack.png)
+Exempel på detektioner:
 
----
-
-### 📡 tcpdump
-Captured Modbus traffic
-
-![tcpdump](screenshots/tcpdump.png)
+- misslyckade inloggningar
+- filändringar
+- misstänkta kommandon
+- nätverksaktivitet
+- simulerade attacker
 
 ---
 
-### 🚨 Suricata Alert
-IDS detecting attack
+## Wazuh Dashboard
 
-![Suricata](screenshots/suricata.png)
+Dashboarden används för att visualisera:
 
----
+- alerts
+- severity levels
+- aktiva agenter
+- threat hunting
+- File Integrity Monitoring
+- säkerhetshändelser i realtid
 
-### 📜 Detection Rule
-Custom rule used
-
-![Rule](screenshots/rule.png)
-
----
-
-### 🔥 Firewall
-Network segmentation rules
-
-![Firewall](screenshots/firewall.png)
+Dashboarden användes kontinuerligt för att verifiera att miljön fungerade korrekt.
 
 ---
 
-## 🧪 Detection
+# Detection Rules
 
-Custom Suricata rule:
+Projektet innehåller egna custom rules i:
 
-```bash
-alert tcp any any -> any 502 (msg:"MODBUS WRITE DETECTED"; content:"|00 06|"; sid:1000001;)
+```text
+configs/local_rules.xml
