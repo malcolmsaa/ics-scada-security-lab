@@ -1,0 +1,22 @@
+<group name="custom,authentication,">
+  <rule id="100001" level="8">
+    <if_sid>5710</if_sid>
+    <match>authentication failure</match>
+    <description>Multiple authentication failures detected</description>
+  </rule>
+</group>
+
+<group name="custom,fim,">
+  <rule id="100002" level="12">
+    <if_sid>550</if_sid>
+    <description>Critical file modification detected</description>
+  </rule>
+</group>
+
+<group name="custom,commands,">
+  <rule id="100003" level="10">
+    <if_sid>5402</if_sid>
+    <match>nc|netcat</match>
+    <description>Suspicious command detected</description>
+  </rule>
+</group>
