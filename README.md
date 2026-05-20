@@ -1,82 +1,136 @@
-# Lab 1 – Centraliserad säkerhetsövervakning med Wazuh
+# ICS/SCADA Security Lab
 
-## Introduction
+## Översikt
 
-I detta projekt implementerade jag en centraliserad säkerhetsövervakningsmiljö med hjälp av Wazuh och Docker. Syftet med projektet var att samla in loggar, analysera säkerhetshändelser, upptäcka attacker samt visualisera och hantera alerts i realtid.
+Detta projekt demonstrerar en segmenterad ICS/SCADA-miljö byggd med Docker för att simulera industriell nätverkssäkerhet och OT-säkerhet i praktiken.
 
-Projektet inkluderar:
+Miljön består av tre separerade zoner:
 
-- Wazuh Manager
-- Wazuh Dashboard
-- Wazuh Indexer
-- Wazuh Agent
-- Egna custom rules
-- File Integrity Monitoring (FIM)
-- AI-baserad anomalidetektion
-- Automatiserad incidentrespons
-- Dokumentation och evidens
+- IT-zon
+- DMZ-zon
+- OT-zon
 
----
-
-# System Architecture
-
-Miljön är uppbyggd enligt en klassisk SIEM-arkitektur där flera komponenter arbetar tillsammans för att upptäcka och analysera säkerhetshot.
-
-## Wazuh Agent
-
-Wazuh-agenten installeras på klienten och ansvarar för att samla in:
-
-- systemloggar
-- filändringar
-- kommandon
-- säkerhetshändelser
-- systemaktivitet
-
-Informationen skickas därefter vidare till Wazuh Manager.
+Syftet med projektet var att förstå:
+- nätverkssegmentering
+- Modbus TCP-kommunikation
+- attackdetektion
+- IDS-övervakning
+- säkerhetsanalys i OT-miljöer
 
 ---
 
-## Wazuh Manager
+## Arkitektur
 
-Wazuh Manager analyserar inkommande loggar och jämför dem mot definierade regler. När misstänkt aktivitet identifieras genereras en alert.
+### IT-zon
+Angriparens arbetsstation där attacken initieras.
 
-Exempel på detektioner:
+### DMZ-zon
+Jump server som fungerar som kontrollerad åtkomstpunkt mellan IT och OT.
 
-- misslyckade inloggningar
-- filändringar
-- misstänkta kommandon
-- nätverksaktivitet
-- simulerade attacker
-
----
-
-## Wazuh Dashboard
-
-Dashboarden används för att visualisera:
-
-- alerts
-- severity levels
-- aktiva agenter
-- threat hunting
-- File Integrity Monitoring
-- säkerhetshändelser i realtid
-
-Dashboarden användes kontinuerligt för att verifiera att miljön fungerade korrekt.
+### OT-zon
+Modbus-server som simulerar industriell utrustning.
 
 ---
 
-# Detection Rules
+## Säkerhetsmodell
 
-Projektet innehåller egna custom rules i:
+Projektet implementerar flera säkerhetsprinciper:
 
-```text
-configs/local_rules.xml
+- Ingen direkt åtkomst mellan IT och OT
+- Trafik filtreras genom brandväggsregler
+- Åtkomst till OT sker endast via jump server
+- Suricata används för IDS-detektion
+- Modbus-trafik analyseras med tcpdump
 
+---
 
-![Dashboard](screenshots/dashboard.png)
+## Attackscenario
 
-![Alerts](screenshots/alerts.png)
+Ett simulerat attackscenario genomfördes från IT-zonen mot OT-miljön.
 
-![Rules](screenshots/rules.png)
+### Attackflöde
 
-![Terminal](screenshots/terminal.png) 
+1. Angriparen ansluter till jump servern
+2. Trafik routas vidare mot OT-zonen
+3. En Modbus write-operation skickas
+4. Registervärden modifieras
+5. Suricata genererar säkerhetsalert
+
+---
+
+## Detektion och Övervakning
+
+### Suricata IDS
+
+Suricata användes för att identifiera misstänkt Modbus-trafik och generera alerts vid write-operationer.
+
+### tcpdump
+
+tcpdump användes för att verifiera och analysera nätverkstrafiken mellan zonerna.
+
+---
+
+## Utmaningar
+
+Projektet innehöll flera tekniska utmaningar:
+
+- Routing mellan containrar
+- Docker-nätverk och segmentering
+- Modbus-kommunikation
+- IDS-regler i Suricata
+- Felsökning av trafikflöden
+- Containerkommunikation mellan zoner
+
+### Lösningar
+
+Problemen löstes genom:
+- stegvis felsökning
+- analys av nätverkstrafik
+- verifiering med tcpdump
+- justering av brandväggsregler
+- analys av Suricata-alerts
+- dokumentation och testning av varje komponent
+
+Projektet var betydligt mer avancerat än tidigare labbar men gav mycket praktisk erfarenhet inom OT- och ICS-säkerhet.
+
+---
+
+## Verktyg och Teknologier
+
+- Docker
+- Docker Compose
+- Python
+- pymodbus
+- Suricata IDS
+- tcpdump
+- iptables
+- Linux networking
+
+---
+
+## Screenshots
+
+### Attack mot OT-zon
+![Attack](screenshots/attack.png)
+
+### Suricata Alert
+![Suricata](screenshots/suricata.png)
+
+### tcpdump Analys
+![tcpdump](screenshots/tcpdump.png)
+
+### Brandväggsregler
+![Firewall](screenshots/firewall.png)
+
+---
+
+## Slutsats
+
+Projektet demonstrerar hur nätverkssegmentering och IDS-övervakning kan användas för att skydda industriella system mot obehörig åtkomst och skadlig trafik.
+
+Labben gav praktisk förståelse för:
+- OT-säkerhet
+- ICS-arkitektur
+- attackdetektion
+- nätverkssegmentering
+- incidentanalys
