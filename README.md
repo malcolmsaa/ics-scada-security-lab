@@ -19,6 +19,41 @@ Syftet med projektet var att förstå:
 
 ---
 
+## Purdue-modell och nätverkssegmentering
+
+Miljön byggdes enligt Purdue-modellen med separerade zoner för IT, DMZ och OT.
+
+```text
+IT Zone
+   |
+   v
+DMZ / Jump Server
+   |
+   v
+OT Zone (OpenPLC + ScadaBR)
+
+---
+
+---
+
+# 2. Lägg till säkerhetsarkitektur
+
+```md
+## Säkerhetsarkitektur
+
+Följande säkerhetsåtgärder implementerades i miljön:
+
+- Segmentering mellan IT, DMZ och OT
+- Brandväggsregler enligt "deny all, allow explicit"
+- IDS med Suricata för övervakning av Modbus-trafik
+- Trafikanalys med tcpdump
+- Wazuh för logginsamling och övervakning
+- Jump server för kontrollerad åtkomst till OT-zonen
+
+Målet var att simulera en realistisk industriell miljö med grundläggande OT-säkerhet.
+
+---
+
 ## Arkitektur
 
 ### IT-zon
@@ -41,6 +76,15 @@ Projektet implementerar flera säkerhetsprinciper:
 - Åtkomst till OT sker endast via jump server
 - Suricata används för IDS-detektion
 - Modbus-trafik analyseras med tcpdump
+
+## Riskanalys
+
+| Risk | Konsekvens | Åtgärd |
+|---|---|---|
+| Obehörig åtkomst till OT-zonen | Manipulation av PLC-data | Segmentering och brandvägg |
+| Modbus utan autentisering | Obehöriga write-kommandon | IDS-regler och nätverksisolering |
+| Lateral movement från IT | Spridning till OT-system | DMZ och begränsad trafik |
+| Sårbara containrar | Exploatering av tjänster | Trivy-scanning och uppdateringar |
 
 ---
 
@@ -70,30 +114,37 @@ tcpdump användes för att verifiera och analysera nätverkstrafiken mellan zone
 
 ---
 
-## Utmaningar
+## Incidentrapport
+
+Ett simulerat angrepp genomfördes mot OT-miljön via Modbus TCP.
+
+Attacktrafiken genererade alerts i Suricata och kunde verifieras med tcpdump.
+
+Övervakningen visade hur IDS kan identifiera misstänkt trafik mellan nätverkszoner.
+
+Attacken dokumenterades med screenshots och logganalys.
+
+---
+
+
+## Utmaningar och lösningar
 
 Projektet innehöll flera tekniska utmaningar:
 
-- Routing mellan containrar
-- Docker-nätverk och segmentering
-- Modbus-kommunikation
-- IDS-regler i Suricata
-- Felsökning av trafikflöden
-- Containerkommunikation mellan zoner
+- Problem med Docker-nätverk och routing mellan zoner
+- Felsökning av Modbus-kommunikation
+- IDS-regler som inte triggade korrekt
+- Containerproblem och felaktiga images
+- Trafik som blockerades av brandväggsregler
 
-### Lösningar
+För att lösa problemen användes:
 
-Problemen löstes genom:
-- stegvis felsökning
-- analys av nätverkstrafik
-- verifiering med tcpdump
-- justering av brandväggsregler
-- analys av Suricata-alerts
-- dokumentation och testning av varje komponent
+- tcpdump för trafikanalys
+- Docker logs och container debugging
+- Anpassade Suricata-regler
+- Dokumentation och felsökning steg för steg
 
-Projektet var betydligt mer avancerat än tidigare labbar men gav mycket praktisk erfarenhet inom OT- och ICS-säkerhet.
-
----
+Projektet var betydligt mer avancerat än tidigare labbar men också mycket lärorikt.
 
 ## Verktyg och Teknologier
 
