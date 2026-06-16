@@ -133,6 +133,27 @@ Bedömningen visar att segmentering och övervakning minskar riskerna avsevärt.
 
 ---
 
+## Utökade Suricata-regler för Modbus
+
+För att förbättra detektionen utökades Suricata med process-specifika regler för flera Modbus-funktionskoder.
+
+Reglerna fokuserar på Modbus WRITE-operationer, eftersom dessa kan användas för att manipulera industriella processvärden.
+
+Övervakade funktionskoder:
+
+- FC5, Write Single Coil
+- FC6, Write Single Register
+- FC15, Write Multiple Coils
+- FC16, Write Multiple Registers
+
+Exempel på Suricata-regler:
+
+```text
+alert tcp any any -> any 502 (msg:"MODBUS FC5 WRITE SINGLE COIL DETECTED"; content:"|00 05|"; sid:1000005;)
+alert tcp any any -> any 502 (msg:"MODBUS FC6 WRITE SINGLE REGISTER DETECTED"; content:"|00 06|"; sid:1000006;)
+alert tcp any any -> any 502 (msg:"MODBUS FC15 WRITE MULTIPLE COILS DETECTED"; content:"|00 0F|"; sid:1000015;)
+alert tcp any any -> any 502 (msg:"MODBUS FC16 WRITE MULTIPLE REGISTERS DETECTED"; content:"|00 10|"; sid:1000016;)
+
 ## Screenshots
 
 ### Attack mot OT-zon
