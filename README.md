@@ -92,6 +92,33 @@ Attacken försökte manipulera registervärden i PLC-miljön. Suricata detektera
 - Loggar sparades för vidare analys.
 
 ---
+## IEC 62443 Security Levels
+
+Miljön bedöms motsvara Security Level 1 (SL1) enligt IEC 62443.
+
+Motivering:
+- Segmentering mellan IT och OT
+- Brandväggsregler för trafikfiltrering
+- IDS-övervakning med Suricata
+- Kontrollerad åtkomst via DMZ och jump server
+
+För att nå högre säkerhetsnivåer krävs:
+- Stark autentisering
+- Krypterad kommunikation
+- Rollbaserad åtkomstkontroll
+- Fler processpecifika IDS-regler
+
+## Incidentrapport
+
+### Detektion
+Suricata identifierade Modbus write-kommandon och genererade larm.
+
+### Containment
+Brandväggsregler begränsade trafiken mellan zonerna och OT-systemet var endast åtkomligt via DMZ.
+
+### Recovery
+Systemets konfiguration verifierades och loggar sparades för vidare analys och förbättring av regler.
+
 
 ## Riskanalys enligt IEC 62443
 
