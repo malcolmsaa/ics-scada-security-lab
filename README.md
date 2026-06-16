@@ -185,3 +185,52 @@ Labben gav praktisk förståelse för:
 - attackdetektion
 - nätverkssegmentering
 - incidentanalys
+## IEC 62443 Security Level Analys
+
+Miljön bedöms uppnå ungefär Security Level 1 (SL1) enligt IEC 62443.
+
+Implementerade säkerhetsåtgärder:
+
+- Nätverkssegmentering mellan IT, DMZ och OT
+- Brandväggsregler enligt "deny all, allow explicit"
+- IDS-övervakning med Suricata
+- Övervakning med Wazuh
+- Logginsamling och trafikanalys
+
+Gap mot högre Security Levels:
+
+- Ingen multifaktorautentisering
+- Ingen kryptering av Modbus-trafik
+- Ingen redundans eller hög tillgänglighet
+- Begränsad åtkomstkontroll
+
+För att uppnå SL2 eller högre krävs starkare autentisering, kryptering och mer avancerad åtkomstkontroll.
+## Riskanalys
+
+| Risk | Sannolikhet | Konsekvens | Åtgärd |
+|------|------------|------------|--------|
+| Obehörig åtkomst till OT | Medel | Hög | Segmentering och brandvägg |
+| Modbus-manipulation | Hög | Hög | IDS-regler och övervakning |
+| Lateral movement från IT | Medel | Hög | DMZ och filtrering |
+| Komprometterad container | Medel | Medel | Uppdateringar och scanning |
+## Incidentrapport
+
+### Händelse
+
+En simulerad attack genomfördes från IT-zonen mot OT-zonen via Modbus TCP.
+
+### Detektion
+
+Suricata identifierade misstänkt Modbus WRITE-trafik och genererade säkerhetslarm.
+
+### Containment
+
+Brandväggsregler begränsade kommunikationen mellan zonerna och all åtkomst till OT skedde via jump server i DMZ.
+
+### Recovery
+
+Miljön återställdes genom att stoppa attacktrafiken och verifiera systemets integritet med loggar och övervakning.
+
+### Lärdomar
+
+Incidenten visade vikten av nätverkssegmentering, IDS och kontinuerlig övervakning i industriella miljöer.
