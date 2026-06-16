@@ -80,45 +80,43 @@ Attacken försökte manipulera registervärden i PLC-miljön. Suricata detektera
 5. Trafiken verifierades med tcpdump.
 6. Händelsen analyserades och dokumenterades.
 
+### Detektion
+
+Suricata identifierade Modbus write-kommandon och genererade larm.
+
 ### Containment
 
-- Trafiken begränsades genom brandväggsregler.
-- Åtkomst till OT-zonen sker endast via DMZ.
+- Brandväggsregler begränsade trafiken mellan zonerna.
+- OT-systemet var endast åtkomligt via DMZ.
+- Direkt kommunikation mellan IT och OT blockerades.
 
 ### Recovery
 
 - Systemets konfiguration verifierades.
-- Säkerhetsregler uppdaterades vid behov.
 - Loggar sparades för vidare analys.
+- Säkerhetsregler förbättrades efter testet.
 
 ---
+
 ## IEC 62443 Security Levels
 
 Miljön bedöms motsvara Security Level 1 (SL1) enligt IEC 62443.
 
-Motivering:
+### Motivering
+
 - Segmentering mellan IT och OT
 - Brandväggsregler för trafikfiltrering
 - IDS-övervakning med Suricata
 - Kontrollerad åtkomst via DMZ och jump server
 
 För att nå högre säkerhetsnivåer krävs:
+
 - Stark autentisering
 - Krypterad kommunikation
 - Rollbaserad åtkomstkontroll
 - Fler processpecifika IDS-regler
 
-## Incidentrapport
-
-### Detektion
-Suricata identifierade Modbus write-kommandon och genererade larm.
-
-### Containment
-Brandväggsregler begränsade trafiken mellan zonerna och OT-systemet var endast åtkomligt via DMZ.
-
-### Recovery
-Systemets konfiguration verifierades och loggar sparades för vidare analys och förbättring av regler.
-
+---
 
 ## Riskanalys enligt IEC 62443
 
@@ -137,8 +135,6 @@ Bedömningen visar att segmentering och övervakning minskar riskerna avsevärt.
 
 För att förbättra detektionen utökades Suricata med process-specifika regler för flera Modbus-funktionskoder.
 
-Reglerna fokuserar på Modbus WRITE-operationer, eftersom dessa kan användas för att manipulera industriella processvärden.
-
 Övervakade funktionskoder:
 
 - FC5, Write Single Coil
@@ -153,6 +149,9 @@ alert tcp any any -> any 502 (msg:"MODBUS FC5 WRITE SINGLE COIL DETECTED"; conte
 alert tcp any any -> any 502 (msg:"MODBUS FC6 WRITE SINGLE REGISTER DETECTED"; content:"|00 06|"; sid:1000006;)
 alert tcp any any -> any 502 (msg:"MODBUS FC15 WRITE MULTIPLE COILS DETECTED"; content:"|00 0F|"; sid:1000015;)
 alert tcp any any -> any 502 (msg:"MODBUS FC16 WRITE MULTIPLE REGISTERS DETECTED"; content:"|00 10|"; sid:1000016;)
+```
+
+---
 
 ## Screenshots
 
@@ -198,7 +197,7 @@ För att lösa problemen användes:
 
 ## Slutsats
 
-Projektet demonstrerar hur nätverkssegmentering, IDS-övervakning och säkerhetskontroller kan användas för att skydda industriella system.
+Projektet demonstrerar hur nätverkssegmentering, IDS-övervakning och säkerhetskontroller kan användas för att skydda industriella system mot obehörig åtkomst och skadlig trafik.
 
 Labben gav praktisk erfarenhet av:
 
